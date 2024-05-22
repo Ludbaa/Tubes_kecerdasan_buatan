@@ -1,26 +1,42 @@
 import speech_recognition as sr
+from gtts import gTTS
+import os
 
 
 def perintah():
-   
     recognizer = sr.Recognizer()
-    microphone = sr.Microphone() 
-    
+    microphone = sr.Microphone()
+
     with microphone as source:
         print('Mendengar...')
-        suara = recognizer.listen(source, phrase_time_limit=5)
+        audio = recognizer.listen(source, phrase_time_limit=5)
 
         try:
             print('Diterima...')
-            dengar = recognizer.recognize_google(suara, language='id-ID')
-            return dengar
+            recognized_text = recognizer.recognize_google(audio, language='id-ID')
+            return recognized_text
         except:
             pass
         return ''
 
+
+def bicara(teks):
+    if not teks:
+        return
+
+    tts = gTTS(text=teks, lang='id', slow=False)
+    filename = 'bicara.mp3'
+    tts.save(filename)
+
+    print('Memutar suara...')
+    os.system(f'start {filename}')
+    
+
+
 def run_kona():
     Layanan = perintah()
-    print(Layanan)
+    if Layanan:
+        bicara(Layanan)
 
 
 if __name__ == '__main__':
